@@ -1,0 +1,9 @@
+/site/
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+.idea/
+.DS_Store
+/SKKU_HTML.zip

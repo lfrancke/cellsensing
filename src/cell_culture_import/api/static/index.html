@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CellSENSING Data</title><link rel="stylesheet" href="static/style.css"></head>
+<body><header class="app-header"><div class="app-header-content"><a class="app-title" href="#home">CellSENSING</a><nav class="app-nav" aria-label="Primary navigation"><a href="#home" data-top-route="home">Home</a><a href="#guide" data-top-route="guide">Guide</a><a href="#subprojects" data-top-route="subprojects">Subprojects</a></nav></div><nav id="subproject-context-nav" class="subproject-context-nav" aria-label="Subproject navigation" hidden><div class="subproject-context-content"><div class="subproject-context-projects"><a href="#subprojects/cho/data-information" data-context-subproject="cho">CHO Cell Cultivation</a><a href="#subprojects/yeast/data-information" data-context-subproject="yeast">Yeast Cultivation</a><a href="#subprojects/yeast-beer-fermentation-maturation/data-information" data-context-subproject="yeast-beer-fermentation-maturation">Yeast/Beer Fermentation &amp; Maturation</a></div><div id="subproject-context-pages" class="subproject-context-pages" hidden><a data-context-page="data-information">Data Information</a><a data-context-page="data-visualisation">Data Visualisation</a></div></div></nav></header>
+<main><section id="home-view" class="app-view information-view" data-view="home"><section class="home-hero"><h1>Soft sensing for bioprocess monitoring</h1><p>CellSENSING investigates soft-sensing approaches for estimating key physiological and process variables in biotechnological processes by combining sensor data with data processing, mathematical modeling, and machine-learning methods.</p></section><section class="home-section"><h2>Why CellSENSING?</h2><p>Cell viability and physiological performance influence both process performance and product quality. These important biological variables are often determined by offline analytical methods, which introduce delays and provide measurements only at a relatively low frequency. Soft sensing uses continuously available sensor and process information to estimate such variables indirectly, supporting a faster response to process changes.</p></section><section class="home-section"><h2>Application Areas</h2><div class="application-cards"><article class="application-card"><h3>Yeast &amp; Brewing</h3><p>CellSENSING investigates yeast management and brewing-related processes, including physiological yeast characteristics and metabolic or process variables. The research scope includes yeast viability, yeast vitality, and beer-maturation metabolites such as diacetyl.</p></article><article class="application-card"><h3>CHO Cell Cultivation</h3><p>CellSENSING also investigates mammalian CHO cell cultivation in biopharmaceutical production, including viable cell density and viability. These project goals extend beyond the particular variables shown in this data application.</p></article></div></section><section class="home-section project-information"><h2>Project Information</h2><dl class="project-grid"><div><dt>Project</dt><dd>CellSENSING</dd></div><div><dt>Project lead</dt><dd>Prof. Dr. Miriam Pein-Hackelbusch<br><dt>Further participating professors:</dt>Prof. Dr. Björn Frahm<br>Prof. Dr. Jan Schneider</dd></div><div><dt>Institution</dt><dd>Institute for Life Science Technologies ILT.NRW,<br>Technische Hochschule Ostwestfalen-Lippe</dd></div><div><dt>Project duration</dt><dd>01 April 2024 – 31 December 2027</dd></div><div><dt>Funding</dt><dd>Federal Ministry of Research, Technology and Space (BMFTR)<br>Program: Forschung an Fachhochschulen<br>Contract number: 13FH045KX2</dd></div><div><dt>Project partners</dt><dd>Hamilton Bonaduz AG<br>Schneider Electric GmbH (with ProLeiT GmbH)<br>WiFö der Deutschen Brauwirtschaft e.V.<br>ZIEMANN HOLVRIEKA GmbH</dd></div></dl><a class="project-link" href="https://www.th-owl.de/forschung/projekte/laufend/projekt/detail/cellsensing-softsensing-systeme-zur-bewertung-von-schluesselparametern-in-hefemanagement-und-bierreifung-sowie-der-zellkultivierung/" target="_blank" rel="noopener noreferrer">Official CellSENSING project page</a></section></section>
+<section id="guide-view" class="app-view information-view" data-view="guide" hidden>
+  <article class="guide-page">
+    <h1>Guide</h1>
+    <section class="guide-introduction">
+      <h2>CellSENSING Data Platform</h2>
+      <p>The CellSENSING Data Platform provides access to experimental bioprocess datasets generated within the CellSENSING project. It combines detailed information on the experimental datasets with interactive visualisation of inline and offline process data.</p>
+      <p>The datasets are organised by subproject. Each subproject provides a Data Information section describing the experimental context and a Data Visualisation section for interactive exploration of the corresponding process data.</p>
+    </section>
+    <section>
+      <h2>Platform Structure</h2>
+      <dl class="guide-structure">
+        <div><dt>Home</dt><dd>Introduces the CellSENSING project and this data platform.</dd></div>
+        <div><dt>Guide</dt><dd>Explains the platform structure and the available visualisation interactions.</dd></div>
+        <div><dt>Subprojects</dt><dd>Organises the datasets by their scientific application area.</dd></div>
+        <div><dt>Data Information</dt><dd>Provides the experimental context for a selected subproject.</dd></div>
+        <div><dt>Data Visualisation</dt><dd>Supports interactive exploration and comparison of recorded process data.</dd></div>
+      </dl>
+    </section>
+    <section>
+      <h2>Using Data Visualisation</h2>
+      <h3>Selecting Experiments</h3>
+      <p>Choose the relevant subproject, then use the available experiment filters and selectors to focus the dashboard on experiments of interest.</p>
+      <h3>Exploring Process Parameters</h3>
+      <p>Expand a scientific group to initialise its measurement panels. Open an individual measurement panel to reveal its controls and plot.</p>
+      <h3>Comparing Experiments</h3>
+      <p>Use the experiment selector within a measurement panel to compare selected experiments and reactors in the same plot.</p>
+      <h3>Visual Encoding</h3>
+      <p>Use Color by and Marker by to encode available experiment metadata, making shared and differing experimental characteristics easier to inspect.</p>
+    </section>
+    <section>
+      <h2>Inline and Offline Data</h2>
+      <p>Data Source controls distinguish inline data, recorded by process sensors, from offline data obtained from sampled analysis. Offline interpolated data are generated from the available discrete offline measurements using PCHIP (Piecewise Cubic Hermite Interpolating Polynomial) interpolation to provide a time-aligned representation.</p>
+    </section>
+    <section>
+      <h2>Interacting with Plots</h2>
+      <p>Hover over traces to inspect values. Use the Plotly controls to zoom, pan, show or hide traces through the legend, and reset the view.</p>
+    </section>
+    <section>
+      <h2>Interpreting the Data</h2>
+      <p>The platform presents experimental process data for exploration and comparison. Interpret trends together with the experimental context provided in Data Information, including the conditions and measurement methods relevant to each subproject.</p>
+    </section>
+    <section>
+      <h2>Terminology</h2>
+      <dl class="guide-terminology">
+        <div><dt>Inline data</dt><dd>Measurements recorded directly during a process.</dd></div>
+        <div><dt>Offline data</dt><dd>Measurements obtained from samples analysed outside the process stream.</dd></div>
+        <div><dt>Experiment</dt><dd>A defined cultivation run or experimental condition in a subproject dataset.</dd></div>
+        <div><dt>Reactor</dt><dd>An individual cultivation vessel associated with an experiment.</dd></div>
+      </dl>
+    </section>
+  </article>
+</section>
+<section id="subprojects-view" class="app-view information-view subprojects-overview" data-view="subprojects" hidden><h1>Subprojects</h1><p>Experimental datasets and associated information are organised into the following CellSENSING subprojects.</p><div class="subproject-card-grid"><article class="subproject-card"><div class="subproject-card-visual"><img src="static/images/subprojects/cho_subproject.png" alt="CHO cell cultivation"></div><h2>CHO Cell Cultivation</h2><p>Experimental CHO cell cultivation datasets with inline and offline process measurements.</p><div class="subproject-card-actions"><a class="subproject-card-action" href="#subprojects/cho/data-information"><span>Data Information</span><span aria-hidden="true">→</span></a><a class="subproject-card-action" href="#subprojects/cho/data-visualisation"><span>Data Visualisation</span><span aria-hidden="true">→</span></a></div></article><article class="subproject-card"><div class="subproject-card-visual"><img src="static/images/subprojects/yeast_subproject.png" alt="Yeast cultivation"></div><h2>Yeast Cultivation</h2><p>Experimental yeast cultivation datasets across small- and pilot-scale bioreactor systems.</p><div class="subproject-card-actions"><a class="subproject-card-action" href="#subprojects/yeast/data-information"><span>Data Information</span><span aria-hidden="true">→</span></a><a class="subproject-card-action" href="#subprojects/yeast/data-visualisation"><span>Data Visualisation</span><span aria-hidden="true">→</span></a></div></article><article class="subproject-card"><div class="subproject-card-visual" aria-hidden="true"><span class="subproject-card-placeholder">Pictogram</span></div><h2>Yeast/Beer Fermentation &amp; Maturation</h2><p>Data and documentation for this subproject will be provided here.</p><div class="subproject-card-actions"><span class="subproject-card-action is-unavailable" aria-disabled="true"><span>Data Information</span><span aria-hidden="true">→</span></span><span class="subproject-card-action is-unavailable" aria-disabled="true"><span>Data Visualisation</span><span aria-hidden="true">→</span></span></div></article></div></section>
+<section id="data-information-view" class="app-view information-view" data-view="data-information" hidden></section>
+<section id="data-visualization-view" class="app-view" data-view="data-visualisation" hidden><h1>Data Visualisation</h1><section class="toolbar"><div class="control-row"><span class="control-label">Data Source</span><div id="source-kind" class="toggle"></div></div></section><section id="metadata-filters" class="chips"></section><section id="global-visual-encoding" class="chips"></section><section id="global-experiments" class="chips"></section><p id="status" aria-live="polite">Choose a data source.</p><section id="panels" class="plots" aria-live="polite"></section></section>
+<section id="empty-subproject-view" class="app-view information-view" data-view="empty-subproject" hidden></section></main><footer class="site-footer"><p>Data: S. Uhlendorff, R. Fulek, J. Eimler, J. Schneider, B. Frahm, M. Pein-Hackelbusch. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Archived on Zenodo: <a href="https://doi.org/10.5281/zenodo.20829177">CHO dataset</a> · <a href="https://doi.org/10.5281/zenodo.19690247">Yeast dataset</a>.</p><p>Code: <a href="https://github.com/lfrancke/cellsensing">github.com/lfrancke/cellsensing</a>, Apache License 2.0.</p></footer><script src="static/vendor/plotly-4.2.0.min.js"></script><script src="static/data.js"></script><script src="static/data-information.js"></script><script src="static/app.js"></script></body></html>
