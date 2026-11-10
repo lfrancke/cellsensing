@@ -63,6 +63,7 @@ def main() -> None:
     (SITE / "index.html").write_text(index.replace(marker, '<html lang="en" data-source="static">', 1), encoding="utf-8")
     (SITE / "static" / "index.html").unlink()
     (SITE / ".nojekyll").touch()
+    shutil.copytree(ROOT / "v2", SITE / "v2")
 
     client = TestClient(create_app(DATA_LAKE))
     manifest: dict[str, list[str]] = {}

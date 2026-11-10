@@ -2,7 +2,10 @@
 
 Interactive viewer for the CellSENSING bioreactor datasets (CHO and yeast cultivations).
 
-Site: https://lfrancke.github.io/cellsensing/
+Site: https://lfrancke.github.io/cellsensing/ (classic view) and https://lfrancke.github.io/cellsensing/v2/ (new viewer).
+
+`v2/` is a static frontend only; it reads the same `data/` files from the build and the dataset descriptions from `static/data-information.js`.
+To try it locally, build the site and serve `site/` as shown below, then open `/v2/`.
 
 ## Run locally
 

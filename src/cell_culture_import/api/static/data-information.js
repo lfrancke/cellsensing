@@ -1,7 +1,9 @@
 (() => {
-  const figure = (caption, alt, path, kind = "", modifier = "") => `<figure class="data-info-figure ${modifier}"><img class="data-info-figure-image ${kind}" src="${path}" alt="${alt}"><figcaption>${caption}</figcaption></figure>`;
-  const table = (headers, rows) => `<div class="data-info-table-wrap"><table class="data-info-table"><thead><tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((item) => `<td>${item}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-  const keyValues = (rows) => `<div class="data-info-table-wrap"><table class="data-info-table data-info-key-values"><tbody>${rows.map((row) => `<tr><th scope="row">${row[0]}</th><td>${row[1]}</td></tr>`).join("")}</tbody></table></div>`;
+  // Image paths are relative to the classic view; a page elsewhere sets data-asset-base on the container.
+  const assetBase = document.querySelector("#data-information-view")?.dataset.assetBase ?? "";
+  const figure = (caption, alt, path, kind = "", modifier = "") => `<figure class="data-info-figure ${modifier}"><img class="data-info-figure-image ${kind}" src="${assetBase}${path}" alt="${alt}"><figcaption>${caption}</figcaption></figure>`;
+  const table = (headers, rows) => `<div class="data-info-table-wrap" tabindex="0" role="region" aria-label="Table"><table class="data-info-table"><thead><tr>${headers.map((item) => `<th>${item}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((item) => `<td>${item}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const keyValues = (rows) => `<div class="data-info-table-wrap" tabindex="0" role="region" aria-label="Table"><table class="data-info-table data-info-key-values"><tbody>${rows.map((row) => `<tr><th scope="row">${row[0]}</th><td>${row[1]}</td></tr>`).join("")}</tbody></table></div>`;
   const choConditions = [["EXP001–004", "Batch", "TC-42", "80", "0.125 | 4.88", "—"], ["EXP005", "Batch", "TC-42", "100", "0.04 | 1.56", "—"], ["EXP006", "Batch", "TC-42", "100", "0.04 | 1.56", "Inoculation density: 6 × 10⁵ viable cells mL⁻¹"], ["EXP007", "Batch", "TC-42", "100", "0.04 | 1.56", "Initial L-glutamine: 6 mM"], ["EXP008", "Batch", "TCX6D", "100", "0.04 | 1.56", "—"], ["EXP009", "Batch", "TCX6D", "100", "0.04 | 1.56", "Lower bottom-impeller position"], ["EXP010", "Fed-Batch", "TC-42", "100", "0.04 | 1.32", "—"], ["EXP011", "Fed-Batch", "TCX6D", "100", "0.04 | 1.32", "Lower bottom-impeller position"], ["EXP012", "Fed-Batch", "TCX6D", "100", "0.04 | 1.32", "—"]];
   const yeastSmall = [["EXP001–002", "W-68", "24", "12", "All: 1", "All: 22"], ["EXP003–004", "W-34/70", "24", "12", "All: 1", "All: 22"], ["EXP005", "W-68", "3", "12", "All: 1", "All: 22"], ["EXP006", "W-34/70", "3", "12", "All: 1", "All: 22"], ["EXP007", "W-68", "3", "12", "All: 0.5", "R01–R02: 22; R03–R04: 37"], ["EXP008", "W-34/70", "3", "12", "All: 0.5", "R01–R02: 22; R03–R04: 37"], ["EXP009", "W-68", "3", "24", "R01–R02: 1; R03–R04: 0.5", "All: 22"], ["EXP010", "W-34/70", "3", "24", "R01–R02: 1; R03–R04: 0.5", "All: 22"], ["EXP011", "W-68", "3", "24", "All: 0.5", "R01–R02: 22; R03–R04: 30"], ["EXP012", "W-34/70", "3", "24", "All: 0.5", "R01–R02: 22; R03–R04: 30"]];
   const yeastPilot = [["EXP013", "W-68", "3", "12", "0.5", "22"], ["EXP014", "W-34/70", "24", "12", "0.5", "22"], ["EXP015", "W-34/70", "3", "12", "0.5", "30"], ["EXP016", "W-68", "24", "12", "0.5", "30"]];
@@ -35,6 +37,11 @@
     const container = document.querySelector("#data-information-view");
     if (!container) return;
     container.innerHTML = `<h1>Data Information</h1>${panel("cho")}${panel("yeast")}`;
+    container.querySelectorAll(".data-info-table-wrap").forEach((wrap) => {
+      const heading = wrap.closest("section")?.querySelector("h3");
+      const dataset = wrap.closest(".data-info-dataset")?.querySelector("h2");
+      if (heading) wrap.setAttribute("aria-label", `${dataset ? `${dataset.textContent}: ` : ""}${heading.textContent}`);
+    });
     window.setDataInformationDataset = (dataset) => {
       container.dataset.activeDataset = dataset;
       container.querySelectorAll("[data-dataset]").forEach((item) => { item.hidden = item.dataset.dataset !== dataset; });

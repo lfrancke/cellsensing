@@ -783,7 +783,7 @@ function resizeDashboardPlots() {
   });
 }
 
-function setDataInformationDataset(subproject) {
+function showDataInformation(subproject) {
   const dataset = subproject === "cho" ? "cho" : "yeast";
   const container = byId("data-information-view");
   container.dataset.activeDataset = dataset;
@@ -831,7 +831,7 @@ function renderRoute(route) {
     if (selected) link.setAttribute("aria-current", "page");
     else link.removeAttribute("aria-current");
   });
-  if (route.page === "data-information" && route.subproject !== "yeast-beer-fermentation-maturation") setDataInformationDataset(route.subproject);
+  if (route.page === "data-information" && route.subproject !== "yeast-beer-fermentation-maturation") showDataInformation(route.subproject);
   if (route.page === "data-visualisation" && route.subproject !== "yeast-beer-fermentation-maturation") {
     enterDashboardSubproject(route.subproject);
     resizeDashboardPlots();
@@ -846,7 +846,7 @@ function syncRoute() {
     return;
   }
   window.history.replaceState(null, "", "#home");
-  renderRoute("home");
+  renderRoute(routeFromHash());
 }
 
 function initializeApplicationShell() {

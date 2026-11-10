@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Explore inline sensor and offline measurement data from 76 CHO and yeast bioreactor cultivations of the CellSENSING project.">
+<title>Explore · CellSENSING Data</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="#explore">CellSENSING <span>Data</span></a>
+    <nav aria-label="Main">
+      <a href="#explore" data-nav="explore">Explore</a>
+      <a href="#datasets/cho" data-nav="datasets">Datasets</a>
+      <a href="#project" data-nav="project">Project</a>
+    </nav>
+    <a class="classic-link" href="../">Classic view</a>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section id="view-explore" class="view" data-view="explore" aria-labelledby="explore-title">
+    <div class="explore-head">
+      <h1 id="explore-title">Explore cultivation data</h1>
+      <fieldset class="segmented" id="dataset-switch">
+        <legend class="visually-hidden">Dataset</legend>
+      </fieldset>
+    </div>
+    <p class="lede" id="dataset-summary"></p>
+
+    <div class="explore-layout">
+      <details class="runs-panel" id="runs-panel" open>
+        <summary><span class="panel-title">Cultivations</span> <span id="runs-count" class="muted"></span></summary>
+        <div class="runs-body">
+          <div id="condition-filters" class="condition-filters"></div>
+          <div class="runs-actions">
+            <button type="button" class="link-button" id="select-all">Select all</button>
+            <button type="button" class="link-button" id="select-none">Clear</button>
+          </div>
+          <p id="filter-hidden" class="muted small" hidden></p>
+          <ul id="experiment-list" class="experiment-list"></ul>
+        </div>
+      </details>
+
+      <div class="charts-area">
+        <div class="charts-toolbar">
+          <button type="button" class="button primary" id="add-parameter">Add measurement</button>
+          <label class="inline-field">Colour by
+            <select id="color-by"></select>
+          </label>
+          <label class="inline-field">Show
+            <select id="display">
+              <option value="runs">Each cultivation</option>
+              <option value="summary">Median and range per group</option>
+            </select>
+          </label>
+          <button type="button" class="button" id="reset-zoom">Reset zoom</button>
+          <button type="button" class="button" id="copy-link">Copy link</button>
+        </div>
+        <div id="legend" class="legend" role="group" aria-label="Legend"></div>
+        <p id="chart-hint" class="muted small chart-hint"></p>
+        <div id="charts" class="charts"></div>
+        <div id="charts-empty" class="empty-state" hidden>
+          <p>No measurement selected.</p>
+          <button type="button" class="button primary" data-action="add-parameter">Add measurement</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-datasets" class="view prose-view" data-view="datasets" hidden aria-labelledby="datasets-title">
+    <h1 id="datasets-title" class="visually-hidden">Datasets</h1>
+    <nav class="tabs" aria-label="Dataset">
+      <a href="#datasets/cho" data-dataset-tab="cho">CHO cultivations</a>
+      <a href="#datasets/yeast" data-dataset-tab="yeast">Yeast cultivations</a>
+    </nav>
+    <p class="dataset-actions"><a class="button" id="dataset-explore-link" href="#explore">Explore this dataset</a> <a class="button" id="dataset-doi-link" href="https://doi.org/10.5281/zenodo.20829177">Download from Zenodo</a></p>
+    <div id="data-information-view" data-asset-base="../"></div>
+  </section>
+
+  <section id="view-project" class="view prose-view" data-view="project" hidden aria-labelledby="project-title">
+    <h1 id="project-title">Soft sensing for bioprocess monitoring</h1>
+    <p class="lede">CellSENSING investigates soft-sensing approaches for estimating key physiological and process variables in biotechnological processes by combining sensor data with data processing, mathematical modeling, and machine-learning methods.</p>
+    <h2>Why CellSENSING?</h2>
+    <p>Cell viability and physiological performance influence both process performance and product quality. These important biological variables are often determined by offline analytical methods, which introduce delays and provide measurements only at a relatively low frequency. Soft sensing uses continuously available sensor and process information to estimate such variables indirectly, supporting a faster response to process changes.</p>
+    <h2>Application areas</h2>
+    <div class="cards">
+      <article class="card"><h3>Yeast &amp; brewing</h3><p>CellSENSING investigates yeast management and brewing-related processes, including physiological yeast characteristics and metabolic or process variables. The research scope includes yeast viability, yeast vitality, and beer-maturation metabolites such as diacetyl.</p><p><a href="#explore?ds=yeast">Explore the yeast data</a></p></article>
+      <article class="card"><h3>CHO cell cultivation</h3><p>CellSENSING also investigates mammalian CHO cell cultivation in biopharmaceutical production, including viable cell density and viability. These project goals extend beyond the particular variables shown in this data application.</p><p><a href="#explore?ds=CHO">Explore the CHO data</a></p></article>
+    </div>
+    <h2>Project information</h2>
+    <dl class="facts">
+      <div><dt>Project lead</dt><dd>Prof. Dr. Miriam Pein-Hackelbusch</dd></div>
+      <div><dt>Participating professors</dt><dd>Prof. Dr. Björn Frahm<br>Prof. Dr. Jan Schneider</dd></div>
+      <div><dt>Institution</dt><dd>Institute for Life Science Technologies ILT.NRW, Technische Hochschule Ostwestfalen-Lippe</dd></div>
+      <div><dt>Project duration</dt><dd><time datetime="2024-04-01">1 April 2024</time> – <time datetime="2027-12-31">31 December 2027</time></dd></div>
+      <div><dt>Funding</dt><dd>Federal Ministry of Research, Technology and Space (BMFTR)<br>Programme: Forschung an Fachhochschulen<br>Contract number: 13FH045KX2</dd></div>
+      <div><dt>Project partners</dt><dd>Hamilton Bonaduz AG<br>Schneider Electric GmbH (with ProLeiT GmbH)<br>WiFö der Deutschen Brauwirtschaft e.V.<br>ZIEMANN HOLVRIEKA GmbH</dd></div>
+    </dl>
+    <p><a href="https://www.th-owl.de/forschung/projekte/laufend/projekt/detail/cellsensing-softsensing-systeme-zur-bewertung-von-schluesselparametern-in-hefemanagement-und-bierreifung-sowie-der-zellkultivierung/">CellSENSING project page at TH OWL</a></p>
+  </section>
+</main>
+
+<dialog id="parameter-dialog" aria-labelledby="parameter-dialog-title">
+  <form method="dialog" class="dialog-inner">
+    <div class="dialog-head">
+      <h2 id="parameter-dialog-title">Add measurement</h2>
+      <button type="submit" class="button" value="cancel">Close</button>
+    </div>
+    <label class="search-field">Search
+      <input type="search" id="parameter-search" autocomplete="off" placeholder="e.g. glucose, pH, permittivity">
+    </label>
+    <div id="parameter-options" class="parameter-options"></div>
+  </form>
+</dialog>
+
+<div id="announcer" class="visually-hidden" aria-live="polite"></div>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p><strong>Data</strong> © S. Uhlendorff, R. Fulek, J. Eimler, J. Schneider, B. Frahm, M. Pein-Hackelbusch, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Please cite the datasets: <a href="https://doi.org/10.5281/zenodo.20829177">CHO cultivations (doi:10.5281/zenodo.20829177)</a> · <a href="https://doi.org/10.5281/zenodo.19690247">yeast cultivations (doi:10.5281/zenodo.19690247)</a>.</p>
+    <p>Values on this site are rounded to 5 significant figures; the Zenodo archives hold the full data. <a href="https://github.com/lfrancke/cellsensing">Source code</a>, Apache License 2.0.</p>
+  </div>
+</footer>
+
+<script src="../static/vendor/plotly-4.2.0.min.js"></script>
+<script src="../static/data-information.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
