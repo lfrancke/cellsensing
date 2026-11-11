@@ -1,7 +1,7 @@
 "use strict";
 
-// Data comes from the static build one level up (../data/), the same files the classic view reads.
-const DATA_ROOT = "../data";
+// The static build puts the data next to this page; the classic view in /classic/ reads the same files.
+const DATA_ROOT = "data";
 
 const DATASETS = {
   CHO: {

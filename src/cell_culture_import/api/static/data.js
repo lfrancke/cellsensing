@@ -1,6 +1,7 @@
 // Data access for the dashboard. The static build (data-source="static" on <html>)
 // reads pre-generated JSON, otherwise the FastAPI backend serves the same shapes.
 const staticData = document.documentElement.dataset.source === "static";
+const dataRoot = `${document.documentElement.dataset.root ?? ""}data`;
 // Lets the dashboard opened from disk (file://) talk to a locally running API.
 const apiBaseUrl = window.location.protocol === "file:" ? "http://127.0.0.1:8000" : "";
 const timeCache = new Map();
@@ -19,7 +20,7 @@ async function fetchStatic(url) {
 }
 
 function seriesDir(cultureRunId, sourceKind) {
-  return `data/series/${cultureRunId.split(":").map(encodeURIComponent).join("/")}/${sourceKind}`;
+  return `${dataRoot}/series/${cultureRunId.split(":").map(encodeURIComponent).join("/")}/${sourceKind}`;
 }
 
 function staticTime(cultureRunId, sourceKind) {
@@ -33,7 +34,7 @@ function staticTime(cultureRunId, sourceKind) {
 }
 
 async function loadOverview(cellType, sourceKind) {
-  if (staticData) return fetchStatic(`data/overview/${encodeURIComponent(cellType)}-${encodeURIComponent(sourceKind)}.json`);
+  if (staticData) return fetchStatic(`${dataRoot}/overview/${encodeURIComponent(cellType)}-${encodeURIComponent(sourceKind)}.json`);
   const query = new URLSearchParams({ cell_type: cellType, source_kind: sourceKind });
   return fetchJson(`${apiBaseUrl}/api/dashboard-overview?${query}`);
 }

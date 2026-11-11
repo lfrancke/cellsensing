@@ -7,12 +7,13 @@ name = "cellsensing"
 version = "0.1.0"
 description = "Viewer for the CellSENSING CHO and yeast cultivation datasets"
 requires-python = ">=3.12"
-dependencies = ["duckdb>=2.0", "fastapi>=0.162", "uvicorn>=0.54"]
+dependencies = ["duckdb>=2.0", "fastapi>=0.162", "uvicorn>=0.54", "pandas>=3.1", "pyarrow>=26"]
 
 [project.optional-dependencies]
 test = ["pytest>=9", "httpx>=0.28"]
 
 [project.scripts]
+culture-import = "cell_culture_import.cli:main"
 culture-api = "cell_culture_import.api.server:main"
 
 [tool.pytest.ini_options]

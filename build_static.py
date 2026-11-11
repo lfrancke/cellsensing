@@ -52,18 +52,45 @@ def write_json(path: Path, payload) -> None:
     path.write_text(json.dumps(payload, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
 
 
+V2_REDIRECT = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CellSENSING Data</title>
+<script>location.replace("../" + location.hash);</script>
+<meta http-equiv="refresh" content="0; url=../"></head>
+<body><p>The viewer has moved to <a href="../">the start page</a>.</p></body></html>
+"""
+
+
+def write_classic_view() -> None:
+    """The classic view lives in /classic/; its source keeps root-relative paths for the development server."""
+    index = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    replacements = {
+        '<html lang="en">': '<html lang="en" data-source="static" data-root="../">',
+        'src="static/': 'src="../static/',
+        'href="static/': 'href="../static/',
+        'href="v2/"': 'href="../"',
+        'href="legal/': 'href="../legal/',
+        'id="data-information-view"': 'id="data-information-view" data-asset-base="../"',
+    }
+    for old, new in replacements.items():
+        if old not in index:
+            raise SystemExit(f"{old!r} not found in index.html")
+        index = index.replace(old, new)
+    (SITE / "classic").mkdir()
+    (SITE / "classic" / "index.html").write_text(index, encoding="utf-8")
+
+
 def main() -> None:
     if SITE.exists():
         shutil.rmtree(SITE)
     shutil.copytree(STATIC_DIR, SITE / "static")
-    index = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
-    marker = '<html lang="en">'
-    if marker not in index:
-        raise SystemExit(f"{marker!r} not found in index.html")
-    (SITE / "index.html").write_text(index.replace(marker, '<html lang="en" data-source="static">', 1), encoding="utf-8")
     (SITE / "static" / "index.html").unlink()
+    write_classic_view()
+    shutil.copytree(ROOT / "v2", SITE, dirs_exist_ok=True)
+    shutil.copytree(ROOT / "legal", SITE / "legal")
+    # Links to /v2/ were shared before the new viewer moved to the root.
+    (SITE / "v2").mkdir()
+    (SITE / "v2" / "index.html").write_text(V2_REDIRECT, encoding="utf-8")
     (SITE / ".nojekyll").touch()
-    shutil.copytree(ROOT / "v2", SITE / "v2")
 
     client = TestClient(create_app(DATA_LAKE))
     manifest: dict[str, list[str]] = {}
