@@ -136,7 +136,7 @@ def test_subprojects_overview_and_context_navigation_are_route_driven_and_future
     assert 'data-view="subprojects"' in overview
     assert ">Subprojects<" in overview
     assert "Experimental datasets and associated information are organised into the following CellSENSING subprojects." in overview
-    assert overview.count('class="subproject-card"') == 3
+    assert overview.count('class="subproject-card"') == 3 and overview.count('<article class="subproject-card" hidden>') == 1
     assert overview.count('class="subproject-card-visual"') == 3
     assert overview.count(">Pictogram<") == 1
     assert '<div class="subproject-card-visual"><img src="static/images/subprojects/cho_subproject.png" alt="CHO cell cultivation"></div>' in overview
@@ -282,3 +282,26 @@ def test_data_information_is_manuscript_grounded_and_uses_route_driven_dataset_s
     assert ".data-info-figure--single { width: 100%; }" in stylesheet
     assert ".data-info-medium-grid" in stylesheet and ".data-info-key-values" in stylesheet
     assert ".data-info-pre-culture" in stylesheet
+
+
+def test_dielectric_sensor_dropouts_are_gaps():
+    run = "cho_20260711_60s:EXP005:R02"
+    traces = client().get("/api/series/compare", params=repeated(culture_run_id=[run], source_kind=["inline"], parameter_id=["permittivity_pf_cm", "conductivity_ms_cm", "ph"])).json()["traces"]
+    by_parameter = {trace["parameter_id"]: trace["values"] for trace in traces}
+    dropouts = [index for index, value in enumerate(by_parameter["conductivity_ms_cm"]) if value is None]
+    assert dropouts and 0 not in by_parameter["conductivity_ms_cm"]
+    assert all(by_parameter["permittivity_pf_cm"][index] is None for index in dropouts)
+    assert all(by_parameter["ph"][index] is not None for index in dropouts)
+
+
+def test_antifoam_column_is_split_into_manual_additions_and_pilot_volume():
+    overview = client().get("/api/dashboard-overview", params={"cell_type": "yeast", "source_kind": "inline"}).json()
+    parameters = {item["parameter_id"]: item for item in overview["parameters"]}
+    addition, volume = parameters["antifoam_addition"], parameters["antifoam_volume_ml"]
+    assert addition["display_label"] == "Antifoam addition (manual)" and addition["subgroup"] == "Antifoam"
+    assert {run.split(":")[1] for run in volume["culture_run_ids"]} == {"EXP013", "EXP014", "EXP015", "EXP016"}
+    assert len(addition["culture_run_ids"]) + len(volume["culture_run_ids"]) == 52
+    values = client().get("/api/series/compare", params=repeated(culture_run_id=YEAST_RUNS, source_kind=["inline"], parameter_id=["antifoam_addition"])).json()["traces"][0]["values"]
+    assert set(values) <= {0, 1, None} and 1 in values
+    skipped = client().get("/api/series/compare", params=repeated(culture_run_id=YEAST_RUNS[:1], source_kind=["inline"], parameter_id=["antifoam_volume_ml"])).json()["skipped_combinations"]
+    assert skipped[0]["reason"] == "parameter_not_available"

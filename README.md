@@ -43,6 +43,7 @@ To change the data, replace the files under `data_lake/` and push.
 The app reads the catalog tables in `data_lake/catalog/` and the series under `data_lake/timeseries/`, nothing else.
 
 Values in the static build are rounded to 5 significant figures, but never to more decimals than the source data has.
+Both servers show dielectric sensor dropouts (scans where the conductivity reads 0) as gaps, and the manual antifoam flag as 0/1 instead of the strings `False`/`True`; the files in `data_lake/` keep the original values.
 
 ## API
 

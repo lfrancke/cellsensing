@@ -155,3 +155,4 @@ button { font: inherit; padding: .45rem .7rem; border-radius: .35rem; cursor: po
 @media (max-width: 480px) { main { margin-top: 1rem; } .app-nav { gap: .65rem 1rem; } .home-hero { padding-top: 1.5rem; } }
 .site-footer { max-width: 1200px; margin: 3rem auto 0; padding: 1.5rem 1rem 2rem; border-top: 1px solid #dbe3ee; color: #475569; font-size: .85rem; line-height: 1.5; } .site-footer p { margin: .25rem 0; } .site-footer a { color: inherit; }
 .new-viewer-link { margin-left: 1rem; font-size: .875rem; font-weight: 600; color: #1d4f86; }
+[hidden] { display: none !important; }

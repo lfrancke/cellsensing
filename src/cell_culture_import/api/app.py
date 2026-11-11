@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from cell_culture_import.dashboard_parameter_layout import display_label, is_dashboard_hidden, layout, offline_allowlist
+from cell_culture_import.dashboard_parameter_layout import DIELECTRIC, display_label, is_dashboard_hidden, layout, offline_allowlist
 
 SOURCE_KINDS = {"inline", "offline_raw", "offline_interpolated"}
 MAX_COMPARE_COMBINATIONS = 60
@@ -95,6 +95,20 @@ def _available_columns(connection: duckdb.DuckDBPyConnection, path: Path) -> lis
     return [entry[0] for entry in result.description]
 
 
+ANTIFOAM_ADDITION = {"parameter_id": "antifoam_addition", "display_name": "Antifoam addition (manual)", "unit": None}
+
+
+def _series_columns(connection: duckdb.DuckDBPyConnection, path: Path) -> set[str]:
+    """Columns as the API exposes them, which splits the antifoam column by its meaning."""
+    types = {row["column_name"]: row["column_type"] for row in _rows(connection, "DESCRIBE SELECT * FROM read_parquet(?)", [str(path)])}
+    # Small-scale yeast runs record manual antifoam additions as 'True'/'False' strings in the
+    # volume column; pilot-scale runs record the cumulative volume in mL there.
+    if types.get("antifoam_volume_ml") == "VARCHAR":
+        del types["antifoam_volume_ml"]
+        types["antifoam_addition"] = "VARCHAR"
+    return set(types)
+
+
 def _deduplicate(ids: list[str]) -> list[str]:
     return list(dict.fromkeys(ids))
 
@@ -114,6 +128,16 @@ def _source_records(connection: duckdb.DuckDBPyConnection, culture_run_ids: List
     placeholders_kinds = ", ".join("?" for _ in source_kinds)
     rows = _rows(connection, f"SELECT culture_run_id, source_kind, source_series_id, parquet_path FROM source_series WHERE culture_run_id IN ({placeholders_runs}) AND source_kind IN ({placeholders_kinds})", [*culture_run_ids, *source_kinds])
     return {(row["culture_run_id"], row["source_kind"]): row for row in rows}
+
+
+def _value_expression(parameter: str, columns: set[str]) -> str:
+    column = _quote_identifier(parameter)
+    # A dielectric sensor dropout records the whole scan as 0, including the conductivity, which is never 0 in a culture.
+    if parameter in DIELECTRIC and "conductivity_ms_cm" in columns:
+        return f"CASE WHEN conductivity_ms_cm = 0 THEN NULL ELSE {column} END"
+    if parameter == "antifoam_addition":
+        return "CASE antifoam_volume_ml WHEN 'True' THEN 1 WHEN 'False' THEN 0 END"
+    return column
 
 
 def _integrity_error(experiment_id: str, field: str, message: str) -> None:
@@ -228,12 +252,14 @@ def create_app(data_lake_path: Path | None = None) -> FastAPI:
                 stored = paths.get(run["culture_run_id"])
                 if stored is None:
                     continue
-                for column in set(_available_columns(con, _safe_series_path(data_lake, stored))) - {"time_hours"}:
+                for column in _series_columns(con, _safe_series_path(data_lake, stored)) - {"time_hours"}:
                     available.setdefault(column, []).append(run["culture_run_id"])
             if not available:
                 return {"cell_type": cell_type, "source_kind": source_kind, "experiments": experiments, "culture_runs": runs, "parameters": [], "filter_dimensions": filter_dimensions, "max_compare_combinations": MAX_COMPARE_COMBINATIONS}
             placeholders = ", ".join("?" for _ in available)
             parameters = _rows(con, f"SELECT parameter_id, display_name, unit FROM parameters WHERE parameter_id IN ({placeholders}) ORDER BY display_name, parameter_id", sorted(available))
+            if "antifoam_addition" in available:
+                parameters.append(dict(ANTIFOAM_ADDITION))
             parameters = [
                 parameter
                 for parameter in parameters
@@ -266,6 +292,8 @@ def create_app(data_lake_path: Path | None = None) -> FastAPI:
             placeholders = ", ".join("?" for _ in parameter_ids)
             parameter_rows = _rows(con, f"SELECT parameter_id, display_name, unit FROM parameters WHERE parameter_id IN ({placeholders})", parameter_ids)
             labels = {row["parameter_id"]: row for row in parameter_rows}
+            if "antifoam_addition" in parameter_ids:
+                labels["antifoam_addition"] = ANTIFOAM_ADDITION
             if "cumulative_naoh_amount_mmol" in parameter_ids:
                 labels["cumulative_naoh_amount_mmol"]={"parameter_id":"cumulative_naoh_amount_mmol","display_name":"Cumulative NaOH amount (mmol)","unit":"mmol"}
             unknown_parameters = [identifier for identifier in parameter_ids if identifier not in labels]
@@ -285,14 +313,14 @@ def create_app(data_lake_path: Path | None = None) -> FastAPI:
                         path = _safe_series_path(data_lake, source["parquet_path"])
                         key = (run["culture_run_id"], kind)
                         if key not in columns_by_source:
-                            columns_by_source[key] = set(_available_columns(con, path))
+                            columns_by_source[key] = _series_columns(con, path)
                         derived = parameter == "cumulative_naoh_amount_mmol" and run["culture_run_id"].startswith("cho_") and kind == "inline"
                         if not derived and parameter not in columns_by_source[key]:
                             skipped.append({**base, "reason": "parameter_not_available"})
                             continue
                         if derived:
                             rows = _rows(con, "SELECT time_hours, cumulative_naoh_weight_g * naoh_concentration_m AS cumulative_naoh_amount_mmol FROM read_parquet(?) ORDER BY time_hours", [str(path)])
-                        else: rows = _rows(con, f"SELECT time_hours, {_quote_identifier(parameter)} FROM read_parquet(?) ORDER BY time_hours", [str(path)])
+                        else: rows = _rows(con, f"SELECT time_hours, {_value_expression(parameter, columns_by_source[key])} AS {_quote_identifier(parameter)} FROM read_parquet(?) ORDER BY time_hours", [str(path)])
                         traces.append({**base, "display_name": labels[parameter]["display_name"], "unit": labels[parameter]["unit"], "time_hours": [_finite_json_value(row["time_hours"], "time_hours") for row in rows], "values": [_finite_json_value(row[parameter], parameter) for row in rows]})
         return {"traces": traces, "skipped_combinations": skipped, "max_combinations": MAX_COMPARE_COMBINATIONS}
 

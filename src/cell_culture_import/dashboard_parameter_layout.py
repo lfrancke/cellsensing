@@ -3,7 +3,8 @@ ADVANCED = {"fitting_quality_cole_fit_r2", "fitting_error_cole_fit_rmse", *{f"c_
 CHO_OFFLINE = ["ammonium_mm","avg_diameter_mean_m","glucose_g_l","lactate_g_l","osmolality_mosmol_kg","tcd_mean_cells_ml","vcd_mean_cells_ml","viability_mean"]
 YEAST_OFFLINE = ["alcohol_content_w_w","avg_diameter_mean_m","density_g_cm3","osmolality_mosmol_kg","real_extract_sg","refractive_index","tcd_mean_cells_ml","vcd_mean_cells_ml","viability_mean"]
 STATIC = {"duration_pre_culture_h","wort_concentration_plato","yeast","bottom_impeller","culture_medium","l_glutamine_start_concentration_mm"}
-HELP = {"culture_medium":"0 = TC-42; 1 = TCX6D", "yeast":"0 = W-68; 1 = W-34/70"}
+DIELECTRIC = {"conductivity_ms_cm", "permittivity_pf_cm", "fc_khz", "deltaeps_pf_cm", "alpha", *ADVANCED}
+HELP = {"culture_medium":"0 = TC-42; 1 = TCX6D", "yeast":"0 = W-68; 1 = W-34/70", "antifoam_addition": "0 = no addition; 1 = manual antifoam addition", "antifoam_volume_ml": "Cumulative volume"}
 CHO_INLINE_HELP = {"bottom_impeller": "0 = upper position; 1 = lower position (closer to Incyte)"}
 STATIC_GROUPS = {
     "duration_pre_culture_h": "Duration pre-culture",
@@ -17,10 +18,9 @@ ORDER = {"dissolved_co2_sat":10,"transmission_arb_unit":20,"reflection_arb_unit"
 def layout(parameter_id, cell_type, source_kind):
     advanced = parameter_id in ADVANCED
     section = "Static Process Variables" if parameter_id in STATIC else "Dynamic Sensor Data"
-    groups={"dissolved_co2_sat":"Dissolved CO2","transmission_arb_unit":"Turbidity","reflection_arb_unit":"Turbidity","absorption_filtered":"Turbidity","ph":"pH","temperature_c":"Temperature","dissolved_o2_air_sat":"Dissolved O2","agitation_rate_rpm":"Agitation","antifoam_volume_ml":"Antifoam","aeration_rate_total_sl_h":"Gas Supply","aeration_rate_air_sl_h":"Gas Supply","aeration_rate_o2_sl_h":"Gas Supply","aeration_rate_co2_sl_h":"Gas Supply","aeration_rate_sl_h":"Gas Supply","o2_fraction_inlet":"Gas Supply","co2_fraction_inlet":"Gas Supply","cer_mmol_l_h":"Offgas","our_mmol_l_h":"Offgas","rq":"Offgas","co2_fraction_exhaust":"Offgas","o2_fraction_exhaust":"Offgas","liquid_volume_l":"Liquid Volume","cumulative_naoh_amount_mmol":"Base Addition","cumulative_feed_weight_g":"Feed"}
-    dielectric={"conductivity_ms_cm","permittivity_pf_cm","fc_khz","deltaeps_pf_cm","alpha"}
+    groups={"dissolved_co2_sat":"Dissolved CO2","transmission_arb_unit":"Turbidity","reflection_arb_unit":"Turbidity","absorption_filtered":"Turbidity","ph":"pH","temperature_c":"Temperature","dissolved_o2_air_sat":"Dissolved O2","agitation_rate_rpm":"Agitation","antifoam_volume_ml":"Antifoam","antifoam_addition":"Antifoam","aeration_rate_total_sl_h":"Gas Supply","aeration_rate_air_sl_h":"Gas Supply","aeration_rate_o2_sl_h":"Gas Supply","aeration_rate_co2_sl_h":"Gas Supply","aeration_rate_sl_h":"Gas Supply","o2_fraction_inlet":"Gas Supply","co2_fraction_inlet":"Gas Supply","cer_mmol_l_h":"Offgas","our_mmol_l_h":"Offgas","rq":"Offgas","co2_fraction_exhaust":"Offgas","o2_fraction_exhaust":"Offgas","liquid_volume_l":"Liquid Volume","cumulative_naoh_amount_mmol":"Base Addition","cumulative_feed_weight_g":"Feed"}
     subgroup = (
-        "Dielectric Spectroscopy" if parameter_id in ADVANCED or parameter_id in dielectric
+        "Dielectric Spectroscopy" if parameter_id in DIELECTRIC
         else STATIC_GROUPS.get(parameter_id, groups.get(parameter_id, "Other"))
     )
     help_text = (
