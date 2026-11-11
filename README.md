@@ -36,7 +36,8 @@ Then open http://127.0.0.1:8001/.
 
 ## Publish
 
-Every push to `main` runs the tests, rebuilds `site/`, checks it against the API and deploys it to GitHub Pages (`.github/workflows/pages.yml`).
+Every pull request and every push to `main` runs the tests, rebuilds `site/` and checks it against the API (`.github/workflows/pages.yml`); only pushes to `main` deploy to GitHub Pages.
+Guidance for AI coding assistants is in [AGENTS.md](AGENTS.md).
 `site/` is build output and is not committed.
 
 To change the data, replace the files under `data_lake/` and push.
