@@ -89,7 +89,7 @@ The raw CSV exports never go into the repository; they are archived on Zenodo.
 
 ### Legal and privacy
 
-- No third-party requests: no Google Fonts, CDNs, analytics, tracking pixels, embedded videos or maps. Each one sends visitors' IP addresses to another company, which needs consent under GDPR. Put libraries into the repository instead (as with Plotly in `static/vendor/`).
+- No third-party requests: no Google Fonts, CDNs, analytics, tracking pixels, embedded videos or maps. Each one sends visitors' IP addresses to another company, which needs consent under GDPR. Put libraries and fonts into the repository instead (as with Plotly in `static/vendor/` and IBM Plex Sans in `v2/fonts/`).
 - Keep the attribution: the data licence (CC BY 4.0), the authors and both Zenodo DOIs stay visible on every page.
 - The privacy notice states that the site sets no cookies, stores nothing in the browser and loads nothing from other providers. Any change that breaks one of these statements needs the privacy notice updated in the same change, and the owner told that the data protection officer has to review it.
 - Do not write legal texts (imprint, privacy notice, accessibility statement) as if final. Draft them, mark them clearly as drafts, and tell the owner they need review by the responsible person at the institution.

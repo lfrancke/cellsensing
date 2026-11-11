@@ -79,6 +79,38 @@ def write_classic_view() -> None:
     (SITE / "classic" / "index.html").write_text(index, encoding="utf-8")
 
 
+HERO_PARAMETER = "permittivity_pf_cm"
+HERO_POINTS = 160
+
+
+def write_hero_image(cell_type: str) -> None:
+    """Decorative SVG for the start page: the permittivity curves of every cultivation of a dataset."""
+    overview = json.loads((SITE / f"data/overview/{cell_type}-inline.json").read_text(encoding="utf-8"))
+    parameter = next((p for p in overview["parameters"] if p["parameter_id"] == HERO_PARAMETER), None)
+    if parameter is None:
+        return
+    curves = []
+    for run in parameter["culture_run_ids"]:
+        directory = SITE / series_dir(run, "inline")
+        time = json.loads((directory / "time.json").read_text(encoding="utf-8"))["t"]
+        values = json.loads((directory / f"{HERO_PARAMETER}.json").read_text(encoding="utf-8"))["v"]
+        step = max(1, len(time) // HERO_POINTS)
+        curves.append([(t, v) for t, v in zip(time[::step], values[::step]) if isinstance(v, (int, float))])
+    max_time = max(t for curve in curves for t, _ in curve)
+    max_value = max(v for curve in curves for _, v in curve)
+    paths = []
+    for curve in curves:
+        points = [f"{t / max_time * 1000:.1f} {300 - max(v, 0) / max_value * 280:.1f}" for t, v in curve]
+        if points:
+            paths.append(f'<path d="M{" L".join(points)}"/>')
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" preserveAspectRatio="none">'
+        '<g fill="none" stroke="#8fd0ff" stroke-width="1.4" stroke-opacity=".5" vector-effect="non-scaling-stroke" stroke-linejoin="round">'
+        + "".join(paths) + "</g></svg>"
+    )
+    (SITE / f"hero-{cell_type}.svg").write_text(svg, encoding="utf-8")
+
+
 def main() -> None:
     if SITE.exists():
         shutil.rmtree(SITE)
@@ -121,6 +153,8 @@ def main() -> None:
                     manifest.setdefault(f"{directory}/time.json", [])
                     manifest[f"{directory}/time.json"].append(parameter_id)
             print(f"{cell_type} {source_kind}: {len(overview['parameters'])} parameters")
+    for cell_type in CELL_TYPES:
+        write_hero_image(cell_type)
     write_json(SITE / "data/manifest.json", {"series": {path.removesuffix("/time.json"): sorted(set(ids)) for path, ids in manifest.items()}})
     size = sum(f.stat().st_size for f in SITE.rglob("*") if f.is_file())
     print(f"site/: {size / 2**20:.1f} MiB, {sum(len(set(v)) for v in manifest.values())} series")

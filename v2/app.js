@@ -344,6 +344,19 @@ function renderDatasetSwitch() {
     container.append(el("label", {}, input, el("span", { text: dataset.longLabel })));
   }
   byId("dataset-summary").textContent = DATASETS[state.dataset].summary;
+  byId("hero-art").src = `hero-${state.dataset}.svg`;
+}
+
+function renderHeroStats() {
+  const catalog = state.catalog;
+  const measured = [...catalog.parameters.values()].filter((parameter) => parameter.source !== "derived");
+  const stats = [
+    [catalog.runs.size, "cultivations"],
+    [catalog.experiments.length, "experiments"],
+    [measured.filter((parameter) => parameter.source === "inline").length, "inline signals, every 60 s"],
+    [measured.filter((parameter) => parameter.source === "offline").length, "offline analytics"],
+  ];
+  byId("hero-stats").replaceChildren(...stats.map(([value, label]) => el("div", {}, el("dt", { text: label }), el("dd", { text: String(value) }))));
 }
 
 function renderConditionFilters() {
@@ -1125,6 +1138,7 @@ async function switchDataset(dataset, params = new URLSearchParams()) {
   }
   if (state.dataset !== dataset) return;
   applyExploreParams(params);
+  renderHeroStats();
   byId("charts").replaceChildren();
   renderConditionFilters();
   renderExperimentList();

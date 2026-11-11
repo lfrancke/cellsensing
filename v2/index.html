@@ -7,6 +7,7 @@
 <meta name="description" content="Explore inline sensor and offline measurement data from 76 CHO and yeast bioreactor cultivations of the CellSENSING project.">
 <title>Explore · CellSENSING Data</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,13 +26,17 @@
 
 <main id="main" tabindex="-1">
   <section id="view-explore" class="view" data-view="explore" aria-labelledby="explore-title">
-    <div class="explore-head">
-      <h1 id="explore-title">Explore cultivation data</h1>
-      <fieldset class="segmented" id="dataset-switch">
-        <legend class="visually-hidden">Dataset</legend>
-      </fieldset>
+    <div class="hero">
+      <img class="hero-art" id="hero-art" src="hero-CHO.svg" alt="">
+      <div class="hero-inner">
+        <h1 id="explore-title">Inline sensors and offline samples from 76&nbsp;bioreactor cultivations</h1>
+        <p class="hero-lede" id="dataset-summary"></p>
+        <fieldset class="segmented on-dark" id="dataset-switch">
+          <legend class="visually-hidden">Dataset</legend>
+        </fieldset>
+        <dl class="hero-stats" id="hero-stats"></dl>
+      </div>
     </div>
-    <p class="lede" id="dataset-summary"></p>
 
     <div class="explore-layout">
       <details class="runs-panel" id="runs-panel" open>
