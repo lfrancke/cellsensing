@@ -48,26 +48,71 @@
       </details>
 
       <div class="charts-area">
+        <fieldset class="segmented view-switch" id="view-switch">
+          <legend class="visually-hidden">View</legend>
+          <label><input type="radio" name="view" value="time" checked><span>Time course</span></label>
+          <label><input type="radio" name="view" value="correlation"><span>Sensor vs. sample</span></label>
+        </fieldset>
         <div class="charts-toolbar">
-          <button type="button" class="button primary" id="add-parameter">Add measurement</button>
+          <button type="button" class="button primary time-only" id="add-parameter">Add measurement</button>
           <label class="inline-field">Colour by
             <select id="color-by"></select>
           </label>
-          <label class="inline-field">Show
+          <label class="inline-field time-only">Show
             <select id="display">
               <option value="runs">Each cultivation</option>
               <option value="summary">Median and range per group</option>
             </select>
           </label>
-          <button type="button" class="button" id="reset-zoom">Reset zoom</button>
-          <button type="button" class="button" id="copy-link">Copy link</button>
+          <button type="button" class="button time-only" id="reset-zoom">Reset zoom</button>
+          <button type="button" class="button" id="share">Share &amp; cite</button>
         </div>
+        <details class="more-options time-only" id="more-options">
+          <summary>More options <span id="more-options-count" class="muted"></span></summary>
+          <div class="more-options-body">
+            <label class="inline-field">Values
+              <select id="normalize">
+                <option value="none">As measured</option>
+                <option value="max">% of each cultivation's maximum</option>
+              </select>
+            </label>
+            <label class="inline-field">Time axis
+              <select id="align"></select>
+            </label>
+          </div>
+        </details>
         <div id="legend" class="legend" role="group" aria-label="Legend"></div>
         <p id="chart-hint" class="muted small chart-hint"></p>
-        <div id="charts" class="charts"></div>
-        <div id="charts-empty" class="empty-state" hidden>
-          <p>No measurement selected.</p>
-          <button type="button" class="button primary" data-action="add-parameter">Add measurement</button>
+        <div id="time-view">
+          <div id="charts" class="charts"></div>
+          <div id="charts-empty" class="empty-state" hidden>
+            <p>No measurement selected.</p>
+            <button type="button" class="button primary" data-action="add-parameter">Add measurement</button>
+          </div>
+        </div>
+        <div id="correlation-view" hidden>
+          <article class="chart-card" aria-labelledby="correlation-title" aria-describedby="correlation-description">
+            <header class="chart-head">
+              <div>
+                <h2 id="correlation-title">Inline sensor against offline sample</h2>
+                <p class="muted small">Each point is one offline sample, paired with the inline value recorded within 6 minutes of it. Lines are least-squares fits per group.</p>
+              </div>
+              <div class="chart-actions">
+                <button type="button" class="button small" id="correlation-csv">Download CSV</button>
+              </div>
+            </header>
+            <div class="correlation-axes">
+              <label class="inline-field">Sensor (x axis) <select id="correlation-x"></select></label>
+              <label class="inline-field">Sample (y axis) <select id="correlation-y"></select></label>
+            </div>
+            <p class="visually-hidden" id="correlation-description"></p>
+            <div class="chart-status muted small" id="correlation-status" role="status"></div>
+            <div class="plot" id="correlation-plot"></div>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Fit per group">
+              <table class="fit-table" id="fit-table"></table>
+            </div>
+            <p class="muted small">R² is the share of the spread in the sample values that the straight line explains: 1 means every point lies on the line, 0 means the line explains nothing.</p>
+          </article>
         </div>
       </div>
     </div>
@@ -116,6 +161,38 @@
       <input type="search" id="parameter-search" autocomplete="off" placeholder="e.g. glucose, pH, permittivity">
     </label>
     <div id="parameter-options" class="parameter-options"></div>
+  </form>
+</dialog>
+
+<dialog id="share-dialog" aria-labelledby="share-dialog-title">
+  <form method="dialog" class="dialog-inner">
+    <div class="dialog-head">
+      <h2 id="share-dialog-title">Share &amp; cite</h2>
+      <button type="submit" class="button" value="cancel">Close</button>
+    </div>
+    <div class="share-body">
+      <section>
+        <h3>Link to this view</h3>
+        <p class="muted small">Opens the same dataset, cultivations, measurements and options.</p>
+        <div class="copy-row"><input type="text" id="share-link" readonly aria-label="Link to this view"><button type="button" class="button small" data-copy="share-link">Copy</button></div>
+      </section>
+      <section>
+        <h3>Cite the data</h3>
+        <pre id="share-citation" tabindex="0"></pre>
+        <button type="button" class="button small" data-copy="share-citation">Copy citation</button>
+        <details>
+          <summary>BibTeX</summary>
+          <pre id="share-bibtex" tabindex="0"></pre>
+          <button type="button" class="button small" data-copy="share-bibtex">Copy BibTeX</button>
+        </details>
+      </section>
+      <section>
+        <h3>Load these data in Python</h3>
+        <p class="muted small">Loads the series shown in this view with pandas. Values are rounded to 5 significant figures; for full precision use the Zenodo archive.</p>
+        <pre id="share-python" tabindex="0"></pre>
+        <button type="button" class="button small" data-copy="share-python">Copy code</button>
+      </section>
+    </div>
   </form>
 </dialog>
 

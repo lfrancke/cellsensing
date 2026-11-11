@@ -70,6 +70,7 @@ For any visible change, open both, in light and dark mode and at phone width, an
 
 - Never change values in `data_lake/`. It is the published dataset; visitors and Zenodo users must be able to rely on it.
 - Corrections for display live in `app.py` and are listed in the README and on the site: dielectric sensor dropouts are shown as gaps, the antifoam column is split into manual additions (small scale) and cumulative volume (pilot scale), and the NaOH amount is derived from mass and concentration. Add new corrections there, document them in the same places, and agree them with the owner first.
+- Quantities the viewer computes itself (growth rate, cumulative oxygen uptake and CO2 evolution) are defined in `addDerivedParameters` in `v2/app.js` and labelled "Derived, not part of the published dataset" wherever they appear. Keep that label on anything new of this kind, and state the formula next to it.
 - Values on the site are rounded to 5 significant figures. Do not change that without the owner's agreement.
 - Never smooth, fill, extrapolate or drop data silently. If a chart needs it, make it visible and switchable.
 

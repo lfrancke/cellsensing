@@ -126,7 +126,8 @@ select, input[type="search"] {
 input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); width: 1.05rem; height: 1.05rem; margin: 0; flex: none; }
 
 .inline-field { display: inline-flex; align-items: center; gap: .5rem; font-size: .9375rem; color: var(--text-secondary); }
-.inline-field select { max-width: 15rem; }
+.inline-field { flex-wrap: wrap; max-width: 100%; }
+.inline-field select { max-width: min(15rem, 100%); }
 
 /* explore */
 
@@ -272,3 +273,38 @@ dialog::backdrop { background: rgb(0 0 0 / .4); }
   .chip:has(input:checked), .segmented input:checked + span { outline: 2px solid CanvasText; }
   .swatch { forced-color-adjust: none; }
 }
+
+/* view switch, more options, sensor against sample, share dialog */
+
+.view-switch { margin-bottom: .75rem; }
+.more-options { margin-top: .6rem; font-size: .9375rem; }
+.more-options > summary { cursor: pointer; color: var(--text-secondary); min-height: 32px; display: inline-flex; align-items: center; gap: .35rem; }
+.more-options-body { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: .5rem 0 .25rem; }
+[hidden] { display: none !important; }
+
+.correlation-axes { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: .75rem 0 .25rem; }
+.correlation-axes select { max-width: min(18rem, 100%); }
+#correlation-plot { height: 420px; }
+.table-wrap { overflow-x: auto; margin: .5rem 0; }
+.fit-table { border-collapse: collapse; font-size: .875rem; min-width: 100%; }
+.fit-table th, .fit-table td { padding: .4rem .7rem; border-bottom: 1px solid var(--grid); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fit-table th[scope="row"], .fit-table thead th:first-child { text-align: left; }
+.fit-table thead th { color: var(--text-secondary); font-weight: 600; }
+.fit-table .swatch { vertical-align: -1px; }
+
+.share-body { overflow: auto; padding: 0 1.25rem 1.25rem; display: grid; gap: 1.25rem; }
+.share-body h3 { margin: 0 0 .25rem; }
+.share-body p { margin: 0 0 .5rem; }
+.share-body pre {
+  margin: 0 0 .5rem; padding: .75rem; background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: .8125rem; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 18rem; overflow: auto;
+}
+.share-body details > summary { cursor: pointer; margin: .5rem 0; color: var(--text-secondary); }
+.copy-row { display: flex; gap: .5rem; }
+.copy-row input { flex: 1; min-width: 0; font: inherit; font-size: .875rem; color: var(--text-primary); background: var(--surface-sunken); border: 1px solid var(--border); border-radius: var(--radius); padding: .4rem .6rem; }
+#share-dialog { width: min(760px, calc(100vw - 2rem)); }
+
+@media (max-width: 900px) {
+  #correlation-plot { height: 340px; }
+}
+.js-plotly-plot .plotly .modebar-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
